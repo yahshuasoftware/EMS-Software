@@ -4,5 +4,5 @@ const app = express()
 
 app.listen(
     8000,
-    ()=> console.log("Backend is running on")
+    ()=> console.log("Backend is running on port: 8000")
 )

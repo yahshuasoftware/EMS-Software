@@ -26,6 +26,9 @@ const login = async (req,res)=>{
     }catch(error){
         res.status(500).json({success:false,error:error.message}) 
     }
+};
+const verify =(req,res)=>{
+    return res.status(200).json({success:true,user:req.user})
 }
 
-export {login};
+export {login,verify};

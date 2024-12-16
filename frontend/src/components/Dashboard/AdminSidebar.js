@@ -20,7 +20,7 @@ const AdminSidebar = () => {
       {/* Navigation Links */}
       <div className="mt-4 px-2 space-y-2">
         <NavLink
-          to="/AdminDashboard"
+          to="/admin-dashboard"
           className={({ isActive }) =>
             `flex items-center space-x-4 py-3 px-4 rounded-lg transition-all duration-300 ${
               isActive
@@ -28,6 +28,7 @@ const AdminSidebar = () => {
                 : "hover:bg-blue-100 text-gray-800"
             }`
           }
+          end
         >
           <FaTachometerAlt className="text-lg" />
           <span className="font-semibold">Dashboard</span>
@@ -46,7 +47,7 @@ const AdminSidebar = () => {
           <span className="font-semibold">Employees</span>
         </NavLink>
         <NavLink
-          to="/admin-departments"
+          to="/admin-dashboard/departments"
           className={({ isActive }) =>
             `flex items-center space-x-4 py-3 px-4 rounded-lg transition-all duration-300 ${
               isActive

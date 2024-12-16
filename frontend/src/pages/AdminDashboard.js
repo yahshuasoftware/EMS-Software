@@ -1,17 +1,15 @@
 import React from 'react';
-// import { useAuth } from "../context/authContext";
-import AdminSidebar from "../components/Dashboard/AdminSidebar";
-import Navbar from "../components/Dashboard/Navbar";
-import AdminSummary from '../components/Dashboard/AdminSummary';
+import AdminSidebar from "../components/dashboard/AdminSidebar";
+import Navbar from "../components/dashboard/Navbar";
+import { Outlet } from 'react-router-dom';
 
 const AdminDashboard = () => {
-  // const { user} = useAuth();
   return (
     <div className="flex">
       <AdminSidebar/>
       <div className='flex-1 ml-64'>
         <Navbar/>
-        <AdminSummary/>
+        <Outlet/>
       </div>
     </div>
   );

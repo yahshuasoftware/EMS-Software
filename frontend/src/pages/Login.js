@@ -61,7 +61,7 @@ const Login = () => {
 
         {/* Login Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
-          <h2 className="text-2xl font-extrabold text-black-700 text-center hover:text-pink-600">
+          <h2 className="text-2xl font-extrabold text-white text-center hover:text-pink-600">
             Login
           </h2>
           {error && (

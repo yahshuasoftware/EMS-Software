@@ -21,9 +21,11 @@ const addLeave=async (req,res) => {
 
 const getLeave=async (req,res) => {
     try{
-        const {id}=req.params;
-        let leaves=await Leave.find({employeeId:id})
-        if(!leaves){
+        const {id,role}=req.params;
+        let leaves
+        if(role==="admin"){
+            leaves=await Leave.find({employeeId:id})
+        }else{
             const employee=await Employee.findOne({userId:id})
              leaves=await Leave.find({employeeId:employee._id})
         }
@@ -69,13 +71,13 @@ const getLeaveDetail=async (req,res) => {
                 },
                 {
                     path:'userId',
-                    select:'name,profileImage'
+                    select:'name profileImage'
                 }
             ]
         })
         return res.status(200).json({success:true,leave})
     }catch(error){
-        return res.status(500).json({success:false,error:"Leave get server error"})
+        return res.status(500).json({success:false,error:"Leave detail server error"})
 }
 }
 

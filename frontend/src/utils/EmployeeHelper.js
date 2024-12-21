@@ -6,35 +6,35 @@ export const columns = [
   {
     name: "S.No",
     selector: (row) => row.sno,
+    width:"100px"
   },
   {
     name: "Name",
     selector: (row) => row.name,
     sortable: true,
+    width:"100px"
   },
   {
     name: "Image",
-    selector: (row) => (
-      <img
-        src={row.profileImage}
-        alt="Profile"
-        className="w-10 h-10 rounded-full"
-      />
-    ),
+    selector: (row) => row.profileImage,
+    width:"100px"
   },
   {
     name: "Department",
     selector: (row) => row.dep_name,
     sortable: true,
+    width:"120px"
   },
   {
     name: "DOB",
     selector: (row) => row.dob,
     sortable: true,
+    width:"130px"
   },
   {
     name: "Action",
     selector: (row) => row.action,
+    center:"true"
   },
 ];
 
@@ -56,6 +56,27 @@ export const fetchDepartments = async () => {
   }
   return departments;
 };
+
+//employees for salary form
+export const getEmployees = async (id) => {
+  let employees;
+  try {
+    const response = await axios.get(`http://localhost:5000/api/employee/department/${id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+
+    if (response.data.success) {
+      employees = response.data.employees;
+    }
+  } catch (err) {
+    console.error("Error occurred while fetching departments:", err);
+  }
+  return employees;
+};
+
+
 
 // Buttons for employee actions
 export const EmployeeButtons = ({ Id }) => {
@@ -83,7 +104,7 @@ export const EmployeeButtons = ({ Id }) => {
       </button>
       <button
         className="px-3 py-1 bg-yellow-600 text-white rounded"
-        onClick={handleEdit}
+        onClick={()=>navigate(`/admin-dashboard/employee/edit/${Id}`)}
       >
         Edit
       </button>

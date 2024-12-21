@@ -25,8 +25,15 @@ const List = () => {
             sno: sno++,
             name: emp.userId.name,
             dep_name: emp.department.dep_name,
-            dob: new Date(emp.dob).toDateString(),
-            profileImage: emp.userId.profileImage || "default-profile.png",
+            dob: new Date(emp.dob).toLocaleDateString(),
+            profileImage: (
+              <img
+                width={40}
+                className="rounded-full border border-gray-300 shadow-sm"
+                src={`http://localhost:5000/${emp.userId.profileImage}`}
+                alt="Profile"
+              />
+            ),
             action: <EmployeeButtons Id={emp._id} />,
           }));
           setEmployees(data);
@@ -45,35 +52,51 @@ const List = () => {
   }, []);
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-gray-100 min-h-screen">
       {/* Header */}
-      <div className="text-center">
-        <h3 className="text-2xl font-bold">Manage Employee</h3>
+      <div className="text-center mb-6">
+        <h3 className="text-3xl font-bold text-gray-700">Manage Employee</h3>
+        <p className="text-gray-500">View and manage all employee records.</p>
       </div>
 
       {/* Search and Add Button */}
-      <div className="flex justify-between items-center my-4">
+      <div className="flex justify-between items-center bg-white shadow-sm rounded-lg p-4 mb-4">
         <input
           type="text"
-          placeholder="Search By Department Name"
-          className="px-4 py-0.5 border rounded"
+          placeholder="Search by Department Name"
+          className="w-1/2 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
         />
         <Link
           to="/admin-dashboard/add-employee"
-          className="px-4 py-1 bg-blue-600 rounded text-white"
+          className="px-6 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition"
         >
           Add New Employee
         </Link>
       </div>
 
       {/* Employee Data Table */}
-      <div className="mt-4">
+      <div className="bg-white shadow-sm rounded-lg p-4">
         <DataTable
           columns={columns}
           data={employees}
           progressPending={empLoading}
           pagination
           highlightOnHover
+          customStyles={{
+            headRow: {
+              style: {
+                backgroundColor: "#f7f7f7",
+                fontWeight: "bold",
+              },
+            },
+            rows: {
+              style: {
+                '&:hover': {
+                  backgroundColor: "#f9f9f9",
+                },
+              },
+            },
+          }}
         />
       </div>
     </div>

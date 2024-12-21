@@ -30,7 +30,7 @@ const Add = () => {
       setImagePreview(URL.createObjectURL(file));
       setFormData((prevData) => ({
         ...prevData,
-        [name]: file[0],
+        [name]: file,
       }));
     } else {
       setFormData((prevData) => ({

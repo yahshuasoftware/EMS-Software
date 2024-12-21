@@ -3,72 +3,100 @@ import User from "../models/User.js"
 import bcrypt from'bcrypt';
 import path from "path";
 import multer from "multer";
-
-const storage=multer.diskStorage({
-    destination:(req,file,cb)=>{
-        cb(null,"public/uploads")
-    },
-    
-    filename:(req,file,cb) =>{
-        cb(null,Date.now()+path.extname(file.originalname))
-    }
-})
-
-const upload=multer({storage:storage})
+import fs from "fs";
+import validator from "validator";
 
 
-const addEmployee=async (req,res) => {
-    try{
-    const {
-        name,
-        email,
-        employeeId,
-        dob,
-        gender,
-        maritalStatus,
-        designation,
-        department,
-        salary,
-        password,
-        role,
-
-    }=req.body;
-
-    const user=await User.findOne({email})
-    if(user){
-        return res.status(400).json({success:false,error:"User already registered in emp"});
-    }
-
-    const hashPassword=await bcrypt.hash(password,10)
-
-    const newUser=new User({
-        name,
-        email,
-        password:hashPassword,
-        role,
-        profileImage:req.file ? req.file.filename : ""
-    })
-    const savedUser= await newUser.save()
-
-    const newEmployee= new Employee({
-        userId:savedUser._id,
-        employeeId,
-        dob,
-        gender,
-        maritalStatus,
-        designation,
-        department,
-        salary
-    })
-    await newEmployee.save()
-    return res.status(200).json({success:true,messege:"Employee created"})
-
-    }catch(error){
-        console.log(error)
-        return res.status(500).json({success:false,error:"server error in adding employee"})
-    }
-
+// Ensure public/uploads directory exists
+const uploadDir = "public/uploads";
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
 }
+
+// Multer storage and configuration
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, "public/uploads");
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname));
+    },
+});
+
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 5 * 1024 * 1024 }, // Limit file size to 5MB
+    fileFilter: (req, file, cb) => {
+        const fileTypes = /jpeg|jpg|png/;
+        const extName = fileTypes.test(path.extname(file.originalname).toLowerCase());
+        const mimeType = fileTypes.test(file.mimetype);
+        if (extName && mimeType) {
+            return cb(null, true);
+        }
+        cb(new Error("Only image files (jpeg, jpg, png) are allowed"));
+    },
+});
+
+// Add Employee Controller
+const addEmployee = async (req, res) => {
+    try {
+        const {
+            name,
+            email,
+            employeeId,
+            dob,
+            gender,
+            maritalStatus,
+            designation,
+            department,
+            salary,
+            password,
+            role,
+        } = req.body;
+
+        // Validate password strength
+        if (!validator.isStrongPassword(password, { minSymbols: 0 })) {
+            return res.status(400).json({ success: false, error: "Password is too weak" });
+        }
+
+        // Check if user already exists
+        const user = await User.findOne({ email });
+        if (user) {
+            return res.status(400).json({ success: false, error: "User already registered" });
+        }
+
+        // Hash password
+        const hashPassword = await bcrypt.hash(password, 10);
+
+        // Create new user
+        const newUser = new User({
+            name,
+            email,
+            password: hashPassword,
+            role,
+            profileImage: req.file ? req.file.filename : "",
+        });
+        const savedUser = await newUser.save();
+
+        // Create new employee
+        const newEmployee = new Employee({
+            userId: savedUser._id,
+            employeeId,
+            dob,
+            gender,
+            maritalStatus,
+            designation,
+            department,
+            salary,
+        });
+        await newEmployee.save();
+
+        return res.status(200).json({ success: true, message: "Employee created successfully" });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ success: false, error: "Server error in adding employee" });
+    }
+};
 
 const getEmployees=async (req,res) => {
     try{

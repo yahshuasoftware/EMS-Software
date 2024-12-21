@@ -73,7 +73,7 @@ const AdminSidebar = () => {
           <span className="font-semibold">Leaves</span>
         </NavLink>
         <NavLink
-          to="/admin-dashboard/acx"
+          to="/admin-dashboard/salary/add"
           className={({ isActive }) =>
             `flex items-center space-x-4 py-3 px-4 rounded-lg transition-all duration-300 ${
               isActive

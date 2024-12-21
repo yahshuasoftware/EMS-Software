@@ -62,12 +62,9 @@ const List = () => {
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
-    
-      <div className="text-center mb-6">
+    <div className="text-center mb-6">
         <h3 className="text-3xl font-extrabold text-gray-800">Manage Employees</h3>
       </div>
-
-     
       <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
         <input
           type="text"
@@ -82,9 +79,7 @@ const List = () => {
           Add New Employee
         </Link>
       </div>
-
-     
-      <div className="bg-white p-4 rounded-lg shadow-lg mt-6">
+       <div className="bg-white p-4 rounded-lg shadow-lg mt-6">
         <DataTable
           columns={columns}
           data={filteredEmployee}

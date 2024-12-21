@@ -11,9 +11,8 @@ const Edit = () => {
     salary: "",
     department: "",
   });
-  const [departments, setDepartments] = useState(null);
+  const [departments, setDepartments] = useState([]);
   const navigate = useNavigate();
-
   const { id } = useParams();
 
   // Fetch departments
@@ -21,7 +20,7 @@ const Edit = () => {
     const getDepartments = async () => {
       try {
         const departments = await fetchDepartments();
-        setDepartments(departments);
+        setDepartments(departments || []);
       } catch (err) {
         console.error("Error fetching departments:", err);
       }
@@ -43,8 +42,15 @@ const Edit = () => {
         );
 
         if (response.data.success) {
-          const employee=response.data.employee;
-          setEmployee((prev)=>({...prev,name:employee.userId.name,maritalStatus:employee.maritlStatus,designation:employee.designation,salary:employee.salary,department:employee.department}))
+          const employee = response.data.employee;
+          setEmployee((prev) => ({
+            ...prev,
+            name: employee.userId.name,
+            maritalStatus: employee.maritalStatus, // Fixed typo here
+            designation: employee.designation,
+            salary: employee.salary,
+            department: employee.department,
+          }));
         } else {
           alert("Failed to fetch employee details.");
         }
@@ -91,7 +97,7 @@ const Edit = () => {
 
   return (
     <>
-      {departments && employee ? (
+      {departments.length > 0 && employee ? (
         <div className="max-w-4xl mx-auto mt-10 bg-white p-8 rounded-md shadow-md">
           <h2 className="text-2xl font-bold mb-6 text-center">Edit Employee</h2>
 

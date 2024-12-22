@@ -11,7 +11,7 @@ const Add = () => {
     deductions: 0,
     payDate: null,
   });
-  const [departments, setDepartments] = useState([]);
+  const [departments, setDepartments] = useState(null);
   const [employees, setEmployees] = useState([]);
   const navigate = useNavigate();
 
@@ -22,7 +22,7 @@ const Add = () => {
         setDepartments(departments || []);
       } catch (error) {
         console.error("Failed to fetch departments:", error);
-        setDepartments([]); // Set to empty array on error
+        setDepartments([]);
       }
     };
     getDepartments();
@@ -30,14 +30,17 @@ const Add = () => {
 
   const handleDepartment = async (e) => {
     try {
-      const emps = await getEmployees(e.target.value);
+      const departmentId = e.target.value;
+      if (!departmentId) {
+        setEmployees([]);
+        return;
+      }
+      const emps = await getEmployees(departmentId);
       setEmployees(emps || []);
     } catch (error) {
-      console.error("Failed to fetch employees:", error);
-      setEmployees([]);
+      console.error("Error fetching employees for department:", error);
     }
   };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setSalary((prevData) => ({
@@ -79,7 +82,6 @@ const Add = () => {
           <h2 className="text-2xl font-bold mb-6 text-center">Add Salary</h2>
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Department Selection */}
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Department
@@ -98,28 +100,28 @@ const Add = () => {
                     ))}
                 </select>
               </div>
-
-              {/* Employee Selection */}
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Employee
                 </label>
                 <select
                   name="employeeId"
+                  value={salary.employeeId || ""}
                   onChange={handleChange}
                   className="mt-1 p-2 block w-full border border-gray-300 rounded-md"
                 >
                   <option value="">Select Employee</option>
-                  {Array.isArray(employees) &&
+                  {employees.length > 0 ? (
                     employees.map((emp) => (
                       <option key={emp._id} value={emp._id}>
-                        {emp.employeeId}
+                        {emp.name}
                       </option>
-                    ))}
+                    ))
+                  ) : (
+                    <option value="">No employees available</option>
+                  )}
                 </select>
               </div>
-
-              {/* Basic Salary */}
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Basic Salary
@@ -132,8 +134,6 @@ const Add = () => {
                   className="mt-1 p-2 block w-full border border-gray-300 rounded-md"
                 />
               </div>
-
-              {/* Allowances */}
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Allowances
@@ -146,8 +146,6 @@ const Add = () => {
                   className="mt-1 p-2 block w-full border border-gray-300 rounded-md"
                 />
               </div>
-
-              {/* Deductions */}
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Deductions
@@ -160,8 +158,6 @@ const Add = () => {
                   className="mt-1 p-2 block w-full border border-gray-300 rounded-md"
                 />
               </div>
-
-              {/* Pay Date */}
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Pay Date
@@ -174,8 +170,6 @@ const Add = () => {
                 />
               </div>
             </div>
-
-            {/* Submit Button */}
             <div className="mt-6">
               <button
                 type="submit"

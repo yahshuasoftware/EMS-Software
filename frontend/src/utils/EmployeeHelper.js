@@ -59,7 +59,6 @@ export const fetchDepartments = async () => {
 
 //employees for salary form
 export const getEmployees = async (id) => {
-  let employees;
   try {
     const response = await axios.get(`http://localhost:5000/api/employee/department/${id}`, {
       headers: {
@@ -67,15 +66,16 @@ export const getEmployees = async (id) => {
       },
     });
 
-    if (response.data.success) {
-      employees = response.data.employees;
+    if (response.data.success && Array.isArray(response.data.employees)) {
+      return response.data.employees;
+      
     }
+    return [];
   } catch (err) {
-    console.error("Error occurred while fetching departments:", err);
+    console.error("Error occurred while fetching employees:", err);
+    return [];
   }
-  return employees;
 };
-
 
 
 // Buttons for employee actions

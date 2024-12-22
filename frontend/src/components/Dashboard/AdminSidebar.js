@@ -34,7 +34,7 @@ const AdminSidebar = () => {
           <span className="font-semibold">Dashboard</span>
         </NavLink>
         <NavLink
-          to="/admin-employees"
+          to="/admin-dashboard/employee"
           className={({ isActive }) =>
             `flex items-center space-x-4 py-3 px-4 rounded-lg transition-all duration-300 ${
               isActive
@@ -60,7 +60,7 @@ const AdminSidebar = () => {
           <span className="font-semibold">Departments</span>
         </NavLink>
         <NavLink
-          to="/admin-leaves"
+          to="/admin-dashboard/admin-leaves"
           className={({ isActive }) =>
             `flex items-center space-x-4 py-3 px-4 rounded-lg transition-all duration-300 ${
               isActive
@@ -73,7 +73,7 @@ const AdminSidebar = () => {
           <span className="font-semibold">Leaves</span>
         </NavLink>
         <NavLink
-          to="/admin-salary"
+          to="/admin-dashboard/salary/add"
           className={({ isActive }) =>
             `flex items-center space-x-4 py-3 px-4 rounded-lg transition-all duration-300 ${
               isActive

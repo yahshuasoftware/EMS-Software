@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
 import { fetchDepartments } from "../../utils/EmployeeHelper";
 
 const Edit = () => {
@@ -8,27 +8,25 @@ const Edit = () => {
     name: "",
     maritalStatus: "",
     designation: "",
-    salary: "",
+    salary: 0,
     department: "",
   });
   const [departments, setDepartments] = useState([]);
   const navigate = useNavigate();
   const { id } = useParams();
 
-  // Fetch departments
   useEffect(() => {
     const getDepartments = async () => {
       try {
         const departments = await fetchDepartments();
-        setDepartments(departments || []);
-      } catch (err) {
-        console.error("Error fetching departments:", err);
+        setDepartments(departments);
+      } catch (error) {
+        console.error("Failed to fetch departments:", error);
       }
     };
     getDepartments();
   }, []);
 
-  // Fetch employee data
   useEffect(() => {
     const fetchEmployee = async () => {
       try {
@@ -43,37 +41,33 @@ const Edit = () => {
 
         if (response.data.success) {
           const employee = response.data.employee;
-          setEmployee((prev) => ({
-            ...prev,
+          setEmployee({
             name: employee.userId.name,
-            maritalStatus: employee.maritalStatus, // Fixed typo here
+            maritalStatus: employee.maritalStatus,
             designation: employee.designation,
             salary: employee.salary,
             department: employee.department,
-          }));
+          });
         } else {
-          alert("Failed to fetch employee details.");
+          console.error("Failed to fetch employee details.");
         }
-      } catch (error) {
-        if (error.response && !error.response.data.success) {
-          alert(error.response.data.error);
-        }
+      } catch (err) {
+        console.error("An error occurred while fetching data:", err);
       }
     };
-
     fetchEmployee();
   }, [id]);
 
-  // Handle form changes
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setEmployee((prevData) => ({ ...prevData, [name]: value }));
+    setEmployee((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
-  // Submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const response = await axios.put(
         `http://localhost:5000/api/employee/${id}`,
@@ -88,25 +82,25 @@ const Edit = () => {
       if (response.data.success) {
         navigate("/admin-dashboard/employee");
       } else {
-        alert("Failed to update employee details.");
+        alert("Failed to update employee.");
       }
-    } catch (err) {
-      alert(err.response?.data?.error || "An error occurred while updating.");
+    } catch (error) {
+      console.error("An error occurred while updating employee:", error);
+      if (error.response && error.response.data.error) {
+        alert(error.response.data.error);
+      }
     }
   };
 
   return (
     <>
-      {departments.length > 0 && employee ? (
+      {departments.length > 0 ? (
         <div className="max-w-4xl mx-auto mt-10 bg-white p-8 rounded-md shadow-md">
           <h2 className="text-2xl font-bold mb-6 text-center">Edit Employee</h2>
-
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Name
-                </label>
+                <label className="block text-sm font-medium text-gray-700">Name</label>
                 <input
                   type="text"
                   name="name"
@@ -119,9 +113,7 @@ const Edit = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Marital Status
-                </label>
+                <label className="block text-sm font-medium text-gray-700">Marital Status</label>
                 <select
                   name="maritalStatus"
                   onChange={handleChange}
@@ -135,41 +127,35 @@ const Edit = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Designation
-                </label>
+                <label className="block text-sm font-medium text-gray-700">Designation</label>
                 <input
                   type="text"
                   name="designation"
-                  value={employee.designation}
                   onChange={handleChange}
+                  value={employee.designation}
                   placeholder="Designation"
                   className="mt-1 p-2 block w-full border border-gray-300 rounded-md"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Salary
-                </label>
+                <label className="block text-sm font-medium text-gray-700">Salary</label>
                 <input
                   type="number"
                   name="salary"
-                  value={employee.salary}
                   onChange={handleChange}
+                  value={employee.salary}
                   placeholder="Salary"
                   className="mt-1 p-2 block w-full border border-gray-300 rounded-md"
                 />
               </div>
 
               <div className="col-span-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Department
-                </label>
+                <label className="block text-sm font-medium text-gray-700">Department</label>
                 <select
                   name="department"
-                  value={employee.department}
                   onChange={handleChange}
+                  value={employee.department}
                   className="mt-1 p-2 block w-full border border-gray-300 rounded-md"
                 >
                   <option value="">Select Department</option>
@@ -187,7 +173,7 @@ const Edit = () => {
                 type="submit"
                 className="w-full bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600 transition"
               >
-                Save Changes
+                Update Employee
               </button>
             </div>
           </form>

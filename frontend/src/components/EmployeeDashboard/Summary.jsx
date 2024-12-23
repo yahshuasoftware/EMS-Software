@@ -2,9 +2,9 @@ import React from "react";
 import { FaUser } from "react-icons/fa";
 import { useAuth } from "../../context/authContext"; // Correct path
 
-const Summary = () => {
+const SummaryCard = () => {
   const { user } = useAuth(); // Access user context
-
+  
   return (
     <div className="flex items-center p-4 shadow-md rounded-lg bg-white">
       <div
@@ -15,11 +15,11 @@ const Summary = () => {
       <div>
         <h3 className="text-lg font-bold text-gray-700">Welcome back</h3>
         <p className="text-2xl font-semibold text-gray-900">
-          {user?.value || "Guest"}{console.log(user?.value)}
+          {user.name}
         </p>
       </div>
     </div>
   );
 };
 
-export default Summary;
+export default SummaryCard;

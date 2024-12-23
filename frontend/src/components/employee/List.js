@@ -30,8 +30,9 @@ const List = () => {
             profileImage: (
               <img
                 width={40}
-                className="rounded-full"
+                className="rounded-full border border-gray-300 shadow-sm"
                 src={`http://localhost:5000/${emp.userId.profileImage}`}
+                alt="Profile"
               />
             ),
             action: <EmployeeButtons Id={emp._id} />,
@@ -61,25 +62,30 @@ const List = () => {
   };
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-    <div className="text-center mb-6">
-        <h3 className="text-3xl font-extrabold text-gray-800">Manage Employees</h3>
+    <div className="p-6 bg-gray-100 min-h-screen">
+      {/* Header */}
+      <div className="text-center mb-6">
+        <h3 className="text-3xl font-bold text-gray-700">Manage Employee</h3>
+        <p className="text-gray-500">View and manage all employee records.</p>
       </div>
-      <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
+
+      {/* Search and Add Button */}
+      <div className="flex justify-between items-center bg-white shadow-sm rounded-lg p-4 mb-4">
         <input
           type="text"
-          placeholder="Search By Employee Name"
-          className="px-4 py-2 border rounded-md w-full md:w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-600"
-          onChange={handleFilter}
+          placeholder="Search by Department Name"
+          className="w-1/2 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
         />
         <Link
           to="/admin-dashboard/add-employee"
-          className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md shadow-md transition duration-200"
+          className="px-6 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition"
         >
           Add New Employee
         </Link>
       </div>
-       <div className="bg-white p-4 rounded-lg shadow-lg mt-6">
+
+      {/* Employee Data Table */}
+      <div className="bg-white shadow-sm rounded-lg p-4">
         <DataTable
           columns={columns}
           data={filteredEmployee}
@@ -89,22 +95,15 @@ const List = () => {
           customStyles={{
             headRow: {
               style: {
-                backgroundColor: "#f9fafb", 
+                backgroundColor: "#f7f7f7",
                 fontWeight: "bold",
               },
             },
             rows: {
               style: {
-                backgroundColor: "#ffffff", 
-                "&:nth-child(even)": {
-                  backgroundColor: "#f3f4f6", 
+                '&:hover': {
+                  backgroundColor: "#f9f9f9",
                 },
-              },
-            },
-            pagination: {
-              style: {
-                backgroundColor: "#f9fafb",
-                padding: "10px",
               },
             },
           }}

@@ -6,7 +6,7 @@ export const columns = [
   {
     name: "S.No",
     selector: (row) => row.sno,
-    width:"70px"
+    width:"100px"
   },
   {
     name: "Name",
@@ -17,19 +17,19 @@ export const columns = [
   {
     name: "Image",
     selector: (row) => row.profileImage,
-    width:"90px"
-        
+    width:"100px"
   },
   {
     name: "Department",
     selector: (row) => row.dep_name,
-   width:"120px"
+    sortable: true,
+    width:"120px"
   },
   {
     name: "DOB",
     selector: (row) => row.dob,
     sortable: true,
-    width:"120px"
+    width:"130px"
   },
   {
     name: "Action",
@@ -57,6 +57,27 @@ export const fetchDepartments = async () => {
   return departments;
 };
 
+//employees for salary form
+export const getEmployees = async (id) => {
+  let employees;
+  try {
+    const response = await axios.get(`http://localhost:5000/api/employee/department/${id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+
+    if (response.data.success) {
+      employees = response.data.employees;
+    }
+  } catch (err) {
+    console.error("Error occurred while fetching departments:", err);
+  }
+  return employees;
+};
+
+
+
 // Buttons for employee actions
 export const EmployeeButtons = ({ Id }) => {
   const navigate = useNavigate();
@@ -83,7 +104,7 @@ export const EmployeeButtons = ({ Id }) => {
       </button>
       <button
         className="px-3 py-1 bg-yellow-600 text-white rounded"
-        onClick={()=> navigate(`/admin-dashboard/employee/edit${Id}`)}
+        onClick={()=>navigate(`/admin-dashboard/employee/edit/${Id}`)}
       >
         Edit
       </button>

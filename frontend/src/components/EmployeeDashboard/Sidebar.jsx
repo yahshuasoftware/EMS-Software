@@ -12,6 +12,7 @@ import {
 } from "react-icons/fa";
 
 const Sidebar = () => {
+  
    const {user} = useAuth()
   return (
     <>
@@ -65,7 +66,7 @@ const Sidebar = () => {
           <span className="font-semibold">Leaves</span>
         </NavLink>
         <NavLink
-          to="/employee-dashboard/salary"
+          to="/employee-dashboard/salary/${user._id}"
           className={({ isActive }) =>
             `flex items-center space-x-4 py-3 px-4 rounded-lg transition-all duration-300 ${
               isActive

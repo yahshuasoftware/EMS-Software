@@ -18,11 +18,11 @@ const AuthProvider = ({ children }) => {
           const response = await axios.get(
             "http://localhost:5000/api/auth/verify",
             {
-              headers: {
+              headers: { 
                 Authorization: `Bearer ${token} `,
               },
             }
-          );
+          );   
           if (response.data.success) {
             setUser(response.data.user);
           }

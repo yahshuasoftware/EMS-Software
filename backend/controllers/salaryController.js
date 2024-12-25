@@ -27,8 +27,9 @@ const addSalary=async (req,res) => {
 const getSalary=async (req,res) => {
     try {
         const {id}=req.params;
-        let salary= await Salary.find({employeeId:id}).populate('employeeId','employeeId')
-       if(!salary){
+        let salary
+        salary= await Salary.find({employeeId:id}).populate('employeeId','employeeId')
+       if(!salary || salary.length <1){
         const employee= await Employee.findOne({userId:id }).populate('employeeId','employeeId')
         salary=await Salary.find({employeeId:employee._id})
        }

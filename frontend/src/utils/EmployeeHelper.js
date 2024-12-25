@@ -6,35 +6,35 @@ export const columns = [
   {
     name: "S.No",
     selector: (row) => row.sno,
-    width:"100px"
+    width: "100px",
   },
   {
     name: "Name",
     selector: (row) => row.name,
     sortable: true,
-    width:"100px"
+    width: "100px",
   },
   {
     name: "Image",
     selector: (row) => row.profileImage,
-    width:"100px"
+    width: "100px",
   },
   {
     name: "Department",
     selector: (row) => row.dep_name,
     sortable: true,
-    width:"120px"
+    width: "120px",
   },
   {
     name: "DOB",
     selector: (row) => row.dob,
     sortable: true,
-    width:"130px"
+    width: "130px",
   },
   {
     name: "Action",
     selector: (row) => row.action,
-    center:"true"
+    center: "true",
   },
 ];
 
@@ -50,16 +50,18 @@ export const fetchDepartments = async () => {
 
     if (response.data.success) {
       departments = response.data.departments;
+    } else {
+      console.error("Failed to fetch departments:", response.data.message);
     }
   } catch (err) {
-    console.error("Error occurred while fetching departments:", err);
+    console.error("Error occurred while fetching departments:", err.response || err.message || err);
   }
   return departments;
 };
 
-//employees for salary form
+// Fetch employees for a specific department
 export const getEmployees = async (id) => {
-  let employees;
+  let employees = [];
   try {
     const response = await axios.get(`http://localhost:5000/api/employee/department/${id}`, {
       headers: {
@@ -69,30 +71,18 @@ export const getEmployees = async (id) => {
 
     if (response.data.success) {
       employees = response.data.employees;
+    } else {
+      console.error("Failed to fetch employees:", response.data.message);
     }
   } catch (err) {
-    console.error("Error occurred while fetching departments:", err);
+    console.error("Error occurred while fetching employees:", err.response || err.message || err);
   }
   return employees;
 };
 
-
-
 // Buttons for employee actions
 export const EmployeeButtons = ({ Id }) => {
   const navigate = useNavigate();
-
-  const handleEdit = () => {
-    console.log(`Edit employee with ID: ${Id}`);
-  };
-
-  const handleSalary = () => {
-    console.log(`View salary for employee with ID: ${Id}`);
-  };
-
-  const handleLeave = () => {
-    console.log(`Manage leave for employee with ID: ${Id}`);
-  };
 
   return (
     <div className="flex space-x-3">
@@ -104,19 +94,19 @@ export const EmployeeButtons = ({ Id }) => {
       </button>
       <button
         className="px-3 py-1 bg-yellow-600 text-white rounded"
-        onClick={()=>navigate(`/admin-dashboard/employee/edit/${Id}`)}
+        onClick={() => navigate(`/admin-dashboard/employee/edit/${Id}`)}
       >
         Edit
       </button>
       <button
         className="px-3 py-1 bg-green-600 text-white rounded"
-        onClick={handleSalary}
+        onClick={() => navigate (`/admin-dashboard/employees/salary/${Id}`)}
       >
         Salary
       </button>
       <button
         className="px-3 py-1 bg-red-600 text-white rounded"
-        onClick={handleLeave}
+        onClick={() => console.log(`Leave for employee ID: ${Id}`)}
       >
         Leave
       </button>

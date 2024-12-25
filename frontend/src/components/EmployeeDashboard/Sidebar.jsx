@@ -66,7 +66,7 @@ const Sidebar = () => {
           <span className="font-semibold">Leaves</span>
         </NavLink>
         <NavLink
-          to="/employee-dashboard/salary/${user._id}"
+          to={`/employee-dashboard/salary/${user._id}`}
           className={({ isActive }) =>
             `flex items-center space-x-4 py-3 px-4 rounded-lg transition-all duration-300 ${
               isActive

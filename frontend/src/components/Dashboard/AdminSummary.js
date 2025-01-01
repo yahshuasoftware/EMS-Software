@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import SummaryCard from "./SummaryCard";
+import axios from "axios";
+
 import {
   FaUsers,
   FaBuilding,
@@ -11,94 +13,89 @@ import {
 } from "react-icons/fa";
 
 const AdminSummary = () => {
-  const overviewData = [
-    {
-      title: "Total Employees",
-      value: 5,
-      icon: <FaUsers className="text-3xl" />,
-      bgColor: "bg-white",
-      iconBgColor: "bg-teal-500",
-    },
-    {
-      title: "Total Departments",
-      value: 3,
-      icon: <FaBuilding className="text-3xl" />,
-      bgColor: "bg-white",
-      iconBgColor: "bg-yellow-500",
-    },
-    {
-      title: "Monthly Pay",
-      value: "$2500",
-      icon: <FaDollarSign className="text-3xl" />,
-      bgColor: "bg-white",
-      iconBgColor: "bg-red-500",
-    },
-  ];
+  const [summary,setSummary]=useState(null)
 
-  const leaveDetailsData = [
-    {
-      title: "Leave Applied",
-      value: 2,
-      icon: <FaFileAlt className="text-3xl" />,
-      bgColor: "bg-white",
-      iconBgColor: "bg-blue-500",
-    },
-    {
-      title: "Leave Pending",
-      value: 1,
-      icon: <FaHourglassHalf className="text-3xl" />,
-      bgColor: "bg-white",
-      iconBgColor: "bg-yellow-500",
-    },
-    {
-      title: "Leave Approved",
-      value: 2,
-      icon: <FaCheckCircle className="text-3xl" />,
-      bgColor: "bg-white",
-      iconBgColor: "bg-green-500",
-    },
-    {
-      title: "Leave Rejected",
-      value: 2,
-      icon: <FaTimesCircle className="text-3xl" />,
-      bgColor: "bg-white",
-      iconBgColor: "bg-red-500",
-    },
-  ];
+  useEffect(()=>{
+    const fetchSummary=async()=>{
+      try{
+       const summary=await axios.get(`http://localhost:5000/api/dashboard/summary`,{
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+       })
+       setSummary(summary.data)
+      }
+      catch(error){
+        if(error.response){
+          alert(error.response.data.error)
+        }
+        console.log(error.message)
+      }
+    }
+    fetchSummary()
+  },[])
+
+  if(!summary){
+    return <div>Loading...</div>
+  }
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
-      {/* Dashboard Overview Section */}
-      <h2 className="text-2xl font-bold mb-4">Dashboard Overview</h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {overviewData.map((item, index) => (
-          <SummaryCard
-            key={index}
-            title={item.title}
-            value={item.value}
-            icon={item.icon}
-            bgColor={item.bgColor}
-            iconBgColor={item.iconBgColor}
-          />
-        ))}
+    <div className="mt-6">
+      <h3 className="text-2xl font-bold text-center">Dashboard Overview</h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+        <SummaryCard
+          icon={<FaUsers />}
+          text="Total Employees"
+          number={summary.totalEmployees}
+          color="bg-teal-600"
+        />
+        <SummaryCard
+          icon={<FaBuilding />}
+          text="Total Departments"
+          number={summary.totalDepartments}
+          color="bg-yellow-600"
+        />
+        <SummaryCard
+          icon={<FaDollarSign />}
+          text="Monthly Salary"
+          number={summary.totalSalary}
+          color="bg-red-600"
+        />
       </div>
-
-      {/* Leave Details Section */}
-      <h2 className="text-2xl font-bold my-6">Leave Details</h2>
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        {leaveDetailsData.map((item, index) => (
+  
+      <div className="mt-6">
+        <h4 className="text-center text-2xl font-bold">Leave Details</h4>
+  
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
           <SummaryCard
-            key={index}
-            title={item.title}
-            value={item.value}
-            icon={item.icon}
-            bgColor={item.bgColor}
-            iconBgColor={item.iconBgColor}
+            icon={<FaFileAlt />}
+            text="Leave Applied"
+            number={summary.leaveSummary.appliedFor}
+            color="bg-teal-600"
           />
-        ))}
+          <SummaryCard
+            icon={<FaHourglassHalf />}
+            text="Leave Approved"
+            number={summary.leaveSummary.approved}
+            color="bg-green-600"
+          />
+          <SummaryCard
+            icon={<FaCheckCircle />}
+            text="Leave Pending"
+            number={summary.leaveSummary.pending}
+            color="bg-yellow-600"
+          />
+          <SummaryCard
+            icon={<FaTimesCircle />}
+            text="Leave Rejected"
+            number={summary.leaveSummary.rejected}
+            color="bg-red-600"
+          />
+        </div>
       </div>
     </div>
   );
-};
+    
+}
 
-export default AdminSummary;
+export default AdminSummary

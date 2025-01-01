@@ -19,7 +19,6 @@ const departmentSchema=new mongoose.Schema({
         type:Date,
         default:Date.now
     }
-
 })
 
 departmentSchema.pre("deleteOne",{document:true,query:false},async function(next) {
@@ -40,3 +39,4 @@ departmentSchema.pre("deleteOne",{document:true,query:false},async function(next
 
 const Department=mongoose.model("Department",departmentSchema)
 export default Department;
+

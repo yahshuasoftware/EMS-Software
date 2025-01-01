@@ -6,7 +6,7 @@ const changePassword =async (req,res) => {
 
         const user=await User.findById({_id:userId})
         if(!user){
-            return res.status(404).json({success:false,error:"User Not Found"})
+            return res.status(404).json({success:false,error:"user not found"})
         }
 
         const isMatch=await bcrypt.compare(oldPassword,user.password)
@@ -18,7 +18,9 @@ const changePassword =async (req,res) => {
 
         const newUser=await User.findByIdAndUpdate({_id:userId},{password:hashPassword})
 
+        return res.status(200).json({success:true})
     }catch(error){
+        console.log(error)
         return res.status(500).json({success:false,error:"setting error"})
     }
 }

@@ -9,47 +9,44 @@ const DepartmentList = () => {
   const [depLoading, setDepLoading] = useState(false);
   const [filteredDepartments, setFilteredDepartments] = useState([]);
 
-  const onDepartmentDelete = async (id) => {
-    const data = departments.filter((dep) => dep._id !== id);
-    setDepartments(data);
+  const onDepartmentDelete = () => {
+    fetchDepartments();
+  };
+
+  const fetchDepartments = async () => {
+    setDepLoading(true);
+    try {
+      const response = await axios.get("http://localhost:5000/api/department", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      if (response.data.success) {
+        let sno = 1;
+        const data = response.data.departments.map((dep) => ({
+          _id: dep._id,
+          sno: sno++,
+          dep_name: dep.dep_name,
+          action: (
+            <DepartmentButtons
+              Id={dep._id}
+              onDepartmentDelete={onDepartmentDelete}
+            />
+          ),
+        }));
+        setDepartments(data);
+        setFilteredDepartments(data);
+      }
+    } catch (error) {
+      if (error.response && !error.response.data.success) {
+        alert(error.response.data.error);
+      }
+    } finally {
+      setDepLoading(false);
+    }
   };
 
   useEffect(() => {
-    const fetchDepartments = async () => {
-      setDepLoading(true);
-      try {
-        const response = await axios.get(
-          "http://localhost:5000/api/department",
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
-        if (response.data.success) {
-          let sno = 1;
-          const data = response.data.departments.map((dep) => ({
-            _id: dep._id,
-            sno: sno++,
-            dep_name: dep.dep_name,
-            action: (
-              <DepartmentButtons
-                Id={dep._id}
-                onDepartmentDelete={onDepartmentDelete}
-              />
-            ),
-          }));
-          setDepartments(data);
-          setFilteredDepartments(data);
-        }
-      } catch (error) {
-        if (error.response && !error.response.data.success) {
-          alert(error.response.data.error);
-        }
-      } finally {
-        setDepLoading(false);
-      }
-    };
     fetchDepartments();
   }, []);
 
@@ -70,7 +67,9 @@ const DepartmentList = () => {
         <div className="p-6 bg-gray-100 min-h-screen">
           {/* Header */}
           <div className="text-center mb-6">
-            <h3 className="text-3xl font-bold text-gray-800">Manage Departments</h3>
+            <h3 className="text-3xl font-bold text-gray-800">
+              Manage Departments
+            </h3>
             <p className="text-gray-500">View and manage department records.</p>
           </div>
 
@@ -79,7 +78,7 @@ const DepartmentList = () => {
             <input
               type="text"
               placeholder="Search by Department Name"
-              className="w-1/2 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+              className="w-1/2 px-2 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
               onChange={filterDepartments}
             />
             <Link

@@ -1,5 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { useAuth } from "../../context/authContext";
+
 import {
   FaTachometerAlt,
   FaUsers,
@@ -9,8 +11,12 @@ import {
   FaCog,
 } from "react-icons/fa";
 
-const AdminSidebar = () => {
+const Sidebar = () => {
+  
+   const {user} = useAuth()
   return (
+    <>
+  
     <div className="bg-white text-gray-800 h-screen fixed left-0 top-0 bottom-0 w-64 shadow-lg">
       {/* Sidebar Header */}
       <div className="bg-black h-16 flex items-center justify-center shadow-md">
@@ -20,7 +26,7 @@ const AdminSidebar = () => {
       {/* Navigation Links */}
       <div className="mt-4 px-2 space-y-2">
         <NavLink
-          to="/admin-dashboard"
+          to="/employee-dashboard"
           className={({ isActive }) =>
             `flex items-center space-x-4 py-3 px-4 rounded-lg transition-all duration-300 ${
               isActive
@@ -34,7 +40,7 @@ const AdminSidebar = () => {
           <span className="font-semibold">Dashboard</span>
         </NavLink>
         <NavLink
-          to="/admin-dashboard/employee"
+            to={`/employee-dashboard/profile/${user._id}`}
           className={({ isActive }) =>
             `flex items-center space-x-4 py-3 px-4 rounded-lg transition-all duration-300 ${
               isActive
@@ -44,10 +50,10 @@ const AdminSidebar = () => {
           }
         >
           <FaUsers className="text-lg" />
-          <span className="font-semibold">Employees</span>
+          <span className="font-semibold">My Profile</span>
         </NavLink>
         <NavLink
-          to="/admin-dashboard/departments"
+          to={`/employee-dashboard/leaves/${user._id}`}
           className={({ isActive }) =>
             `flex items-center space-x-4 py-3 px-4 rounded-lg transition-all duration-300 ${
               isActive
@@ -57,10 +63,10 @@ const AdminSidebar = () => {
           }
         >
           <FaBuilding className="text-lg" />
-          <span className="font-semibold">Departments</span>
+          <span className="font-semibold">Leaves</span>
         </NavLink>
         <NavLink
-          to="/admin-dashboard/leaves"
+          to={`/employee-dashboard/salary/${user._id}`}
           className={({ isActive }) =>
             `flex items-center space-x-4 py-3 px-4 rounded-lg transition-all duration-300 ${
               isActive
@@ -70,23 +76,11 @@ const AdminSidebar = () => {
           }
         >
           <FaCalendarAlt className="text-lg" />
-          <span className="font-semibold">Leaves</span>
-        </NavLink>
-        <NavLink
-          to="/admin-dashboard/salary/add"
-          className={({ isActive }) =>
-            `flex items-center space-x-4 py-3 px-4 rounded-lg transition-all duration-300 ${
-              isActive
-                ? "bg-blue-500 text-white"
-                : "hover:bg-blue-100 text-gray-800"
-            }`
-          }
-        >
-          <FaMoneyBill className="text-lg" />
           <span className="font-semibold">Salary</span>
         </NavLink>
+        
         <NavLink
-          to="/admin-dashboard/Setting"
+          to="/employee-dashboard/setting"
           className={({ isActive }) =>
             `flex items-center space-x-4 py-3 px-4 rounded-lg transition-all duration-300 ${
               isActive
@@ -105,7 +99,8 @@ const AdminSidebar = () => {
         <p className="text-xs text-gray-500">&copy; 2024 EM Management</p>
       </div>
     </div>
+    </>
   );
 };
 
-export default AdminSidebar;
+export default Sidebar;

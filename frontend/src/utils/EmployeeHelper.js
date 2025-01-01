@@ -57,8 +57,9 @@ export const fetchDepartments = async () => {
   return departments;
 };
 
-//employees for salary form
+// Fetch employees for a specific department
 export const getEmployees = async (id) => {
+  let employees = [];
   try {
     const response = await axios.get(`http://localhost:5000/api/employee/department/${id}`, {
       headers: {
@@ -66,17 +67,16 @@ export const getEmployees = async (id) => {
       },
     });
 
-    if (response.data.success && Array.isArray(response.data.employees)) {
-      return response.data.employees;
-      
+    if (response.data.success) {
+      employees = response.data.employees;
+    } else {
+      console.error("Failed to fetch employees:", response.data.message);
     }
-    return [];
   } catch (err) {
-    console.error("Error occurred while fetching employees:", err);
-    return [];
+    console.error("Error occurred while fetching employees:", err.response || err.message || err);
   }
+  return employees;
 };
-
 
 // Buttons for employee actions
 export const EmployeeButtons = ({ Id }) => {
@@ -110,13 +110,13 @@ export const EmployeeButtons = ({ Id }) => {
       </button>
       <button
         className="px-3 py-1 bg-green-600 text-white rounded"
-        onClick={handleSalary}
+        onClick={() => navigate (`/admin-dashboard/employees/salary/${Id}`)}
       >
         Salary
       </button>
       <button
         className="px-3 py-1 bg-red-600 text-white rounded"
-        onClick={handleLeave}
+        onClick={()=>navigate(`/admin-dashboard/employees/leaves/${Id}`)}
       >
         Leave
       </button>
